@@ -1,32 +1,32 @@
-from model import create_user, get_user_by_email, update_user_password
-from view import show_message, show_error
+from model import create_ticket, get_ticket_status, update_ticket_status
+from view import show_message, show_error, show_ticket_status
 
-def register_user(user_name, user_email, user_password):
-    # Verificar se o usuário já existe
-    existing_user = get_user_by_email(user_email)
-    if existing_user:
-        show_error("O usuário com este e-mail já existe.")
-        return
-    
-    # Criar o usuário
-    create_user(user_name, user_email, user_password)
-    show_message(f"Usuário {user_name} registrado com sucesso!")
+class TicketController:
+    def __init__(self):
+        #self.session = Session()
+        pass
 
-def login_user(user_email, user_password):
-    user = get_user_by_email(user_email)
-    if not user:
-        show_error("Usuário não encontrado.")
-        return
-    elif user[3] != user_password:  # user[3] é a senha da base de dados
-        show_error("Senha incorreta.")
-        return
-    else:
-        show_message(f"Bem-vindo, {user[1]}!")  # user[1] é o nome do usuário
+    def create_new_ticket(self, user_id, event_id, ticket_price, status, category):     
+        try:
+            # Criar o bilhete com a função no model
+            create_ticket(user_id, event_id, ticket_price, status, category)
+            show_message("Bilhete criado com sucesso!")
+        except Exception as e:
+            show_error(f"Erro ao criar o bilhete: {str(e)}")
 
-def change_password(user_email, new_password):
-    user = get_user_by_email(user_email)
-    if not user:
-        show_error("Usuário não encontrado.")
-        return
-    update_user_password(user_email, new_password)
-    show_message("Senha atualizada com sucesso!")
+    #verifica estado do bilhete
+    def check_ticket_status(self, ticket_id):
+        try:             
+            status = get_ticket_status(ticket_id) #recebe o estado do bilhete
+            show_ticket_status(status)
+        except Exception as e:
+            show_error(f"Erro ao buscar o status do bilhete: {str(e)}")
+
+    #método para atualizar o estado do bilhete
+    def update_ticket_status_manually(self, ticket_id, new_status):
+        try:
+            update_ticket_status(ticket_id, new_status) #função dentro do model
+            show_message(f"Status do bilhete com ID = {ticket_id}, atualizado para: {new_status}")
+        except Exception as e:
+            show_error(f"Erro ao atualizar o status do bilhete: {str(e)}")
+            

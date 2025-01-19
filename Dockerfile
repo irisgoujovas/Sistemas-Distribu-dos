@@ -11,7 +11,7 @@ COPY . .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Expor a porta
-EXPOSE 5001
+EXPOSE 5003
 
 # Comando para iniciar o serviço
 CMD ["python", "app.py"]
